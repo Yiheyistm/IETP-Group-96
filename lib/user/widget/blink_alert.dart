@@ -31,8 +31,7 @@ class _AlertBlinkScreenState extends State<AlertBlinkScreen> {
   }
 
   void _startBlinking() {
-    // Only start blinking if there is an alert message
-    if (alertMessage.isNotEmpty) {
+    if (widget.alertMessage.isNotEmpty) {
       _blinkTimer = Timer.periodic(Duration(milliseconds: 500), (timer) {
         setState(() {
           _isVisible = !_isVisible; // Toggle visibility
@@ -43,18 +42,44 @@ class _AlertBlinkScreenState extends State<AlertBlinkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return alertMessage.isNotEmpty && _isVisible
-        ? Card(
-            color: Colors.red[500],
-            child: ListTile(
-              title: Text(
-                "Alerts:",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(
-                alertMessage,
-                style: TextStyle(fontSize: 16),
-              ),
+
+    return widget.alertMessage.isNotEmpty && _isVisible
+        ? Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.red,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Alert",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                    Icon(
+                      Icons.warning,
+                      color: Colors.white,
+                      size: 40,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "${widget.alertMessage}",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.white),
+                ),
+              ],
             ),
           )
         : SizedBox();

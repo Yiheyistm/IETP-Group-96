@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ietp_g96/home/home_screen.dart';
+import 'package:smart_helmet/home/home_screen.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -12,7 +12,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 1)).then((_) async {
+      Future.delayed(const Duration(seconds: 2)).then((_) async {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (contex) => HomeScreen()));
       });
@@ -46,6 +46,21 @@ class _SplashViewState extends State<SplashView> {
                 fit: BoxFit.fill,
               ),
             ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+                "Building with Safety, Powered by Innovation\nThe Smart Helmet You Can Trust!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.amberAccent)),
+            SizedBox(
+              height: 20,
+            ),
+            CircularProgressIndicator(
+              color: Colors.amberAccent,
+            )
           ],
         ),
       ),

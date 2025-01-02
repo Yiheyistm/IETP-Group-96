@@ -32,7 +32,7 @@ class NotificationService {
       if (status.isGranted) {
         // Notification permission granted
       } else {
-        // Handle the case where the user denied permission
+        openAppSettings();
       }
     }
   }
@@ -50,39 +50,30 @@ class NotificationService {
       String? body,
       String? payload,
       String intesities = "Normal"}) async {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'threshold_channel', // Channel ID
-      'Threshold Alerts', // Channel name
-      importance: Importance.high,
-      priority: Priority.high,
-    );
 
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidDetails);
-
-    await flutterLocalNotificationsPlugin.show(
-      0, // Notification ID
-      title, // Notification title
-      body, // Notification body
-      notificationDetails,
-    );
     if (await Vibration.hasVibrator() ?? false) {
       switch (intesities) {
         case "Normal":
-          Vibration.vibrate(duration: 1000);
+          vibratePhone(duration: 2000, intesities: []);
           break;
         case "Low":
-          Vibration.vibrate(duration: 500, intensities: [128]);
+          vibratePhone(duration: 500, intesities: [128]);
           break;
         case "High":
-          Vibration.vibrate(
-              duration: 1000, intensities: [255, 300, 500, 800], repeat: 1);
+          vibratePhone(
+              duration: 3000, intesities: [255, 300, 500, 800], repeat: 3);
           break;
         default:
-          Vibration.vibrate(duration: 1000);
+          vibratePhone(duration: 1000, intesities: []);
       }
     }
+    return flutterLocalNotificationsPlugin.show(
+      0, // Notification ID
+      title, // Notification title
+      body, // Notification body
+      notificationDetails(),
+      payload: payload, // Notification payload
+    );
   }
 
   // Function to vibrate the phone

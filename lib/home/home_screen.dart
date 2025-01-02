@@ -4,8 +4,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:ietp_g96/bluetooth/bluetooth_off_screen.dart';
-import 'package:ietp_g96/bluetooth/check_connection.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:smart_helmet/bluetooth/bluetooth_off_screen.dart';
+import 'package:smart_helmet/bluetooth/check_connection.dart';
+import 'package:smart_helmet/global/constant.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    requestPermission();
     super.initState();
-    print('HomeScreen initState');
     _getCurrentBluetoothState();
     _bluetoothStateSubscription = FlutterBluetoothSerial.instance
         .onStateChanged()
@@ -50,6 +52,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> requestPermission() async {
+    final locStatus = await Permission.location.request();
+    final status = await Permission.bluetoothScan.request();
+    final bluetoothEnable = await Permission.bluetoothConnect.request();
+
+    if (status.isGranted && locStatus.isGranted) {
+    } else if (bluetoothEnable.isDenied ||
+        bluetoothEnable.isPermanentlyDenied ||
+        status.isDenied ||
+        status.isPermanentlyDenied ||
+        locStatus.isDenied ||
+        locStatus.isPermanentlyDenied) {
+      openAppSettings();
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     print(_bluetoothState);
@@ -62,9 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Notification Example',
-      theme: ThemeData.dark(
-        useMaterial3: true,
-      ).copyWith(primaryColor: Colors.blue),
+      theme: ThemeData.dark(useMaterial3: true).copyWith(
+        scaffoldBackgroundColor: bgColor,
+        canvasColor: secondaryColor,
+      ),
       home: screen,
       navigatorObservers: [BluetoothAdapterStateObserver()],
     );
