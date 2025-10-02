@@ -35,7 +35,7 @@ class _UserMonitorPageState extends State<UserMonitorPage> {
   double temperature = 37.0;
   double gasLevel = 200;
   double heartbeat = 72;
-  List<double> gps = [8.8852, 38.8098];
+  List<double> gps = [8.8835250, 38.8104238];
   String alertMessage = "";
   double tempTemperature = 37;
   double tempHeartbeat = 65;
@@ -75,7 +75,7 @@ class _UserMonitorPageState extends State<UserMonitorPage> {
               temperature = sensorData['Temperature'] ?? tempTemperature;
               gasLevel = sensorData['Gas'] ?? tempGas;
               heartbeat = sensorData['Heartbeat'] ?? tempHeartbeat;
-              gps = sensorData['GPS'] ?? [8.8852, 38.8098];
+              gps = sensorData['GPS'] ?? [8.8835250, 38.8104238];
               if (sensorData['Heartbeat'] != null) {
                 tempHeartbeat = sensorData['Heartbeat'];
               }
@@ -193,7 +193,8 @@ class _UserMonitorPageState extends State<UserMonitorPage> {
     // if three conditions are met
     if (temperature > tempThresholdHigh &&
         gasLevel > gasThreshold &&
-        heartbeat > heartbeatThresholdHigh) {
+        (heartbeat > heartbeatThresholdHigh || heartbeat < heartbeatThresholdLow)
+        ) {
       alertMessage += '''
     All Thresholds Reached!\n
     High Temperature!\n
@@ -362,7 +363,7 @@ class _UserMonitorPageState extends State<UserMonitorPage> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
-                        color: heartbeat > heartbeatThresholdHigh
+                        color: heartbeat > heartbeatThresholdHigh || heartbeat < heartbeatThresholdLow
                             ? Colors.red
                             : Colors.green),
                   ),
